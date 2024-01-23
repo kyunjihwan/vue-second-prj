@@ -8,14 +8,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
+
+const emits = defineEmits(['addTodo'])
 
 const newTodoItem = ref('')
 const fnAddTodo = () => {
   if (newTodoItem.value !== '') {
-    const obj = { completed: false, item: newTodoItem.value }
-    // 저장하는 로직
-    localStorage.setItem(newTodoItem.value, JSON.stringify(obj))
+    emits('addTodo', newTodoItem.value)
     fnClearInput()
   }
 }

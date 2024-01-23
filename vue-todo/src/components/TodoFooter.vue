@@ -5,8 +5,11 @@
 </template>
 
 <script setup>
+import { defineEmits } from 'vue'
+const emits = defineEmits(['removeAllTodo'])
+
 const fnClearTodo = () => {
-  localStorage.clear()
+  emits('removeAllTodo')
 }
 </script>
 

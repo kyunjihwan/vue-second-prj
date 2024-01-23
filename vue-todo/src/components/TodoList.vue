@@ -5,7 +5,7 @@
         <i
           class="checkBtn fas fa-check"
           :class="{ checkBtnCompleted: todo.completed }"
-          @click="fnToggleComplete(todo, index)"
+          @click="fnToggleComplete(index)"
         ></i>
         <span :class="{ textCompleted: todo.completed }">{{ todo.item }}</span>
         <span @click="fnRemoveTodo(todo, index)" class="removeBtn">
@@ -17,29 +17,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
-const todoList = ref([])
+const props = defineProps({
+  todoList: {
+    type: Array,
+    default: null,
+  },
+})
 
-const fnInit = () => {
-  if (localStorage.length > 0) {
-    todoList.value = Object.keys(localStorage).map((key) => {
-      return JSON.parse(localStorage.getItem(key))
-    })
-  }
-}
+const emits = defineEmits(['removeOneItem', 'toggleComplete'])
 
 const fnRemoveTodo = (todo, index) => {
-  localStorage.removeItem(todo.item)
-  todoList.value.splice(index, 1)
+  emits('removeOneItem', todo, index)
 }
 
-const fnToggleComplete = (todo, index) => {
-  todo.completed = !todo.completed
-  localStorage.setItem(todo.item, JSON.stringify(todo))
+const fnToggleComplete = (index) => {
+  emits('toggleComplete', index)
 }
-
-fnInit()
 </script>
 
 <style scoped>
