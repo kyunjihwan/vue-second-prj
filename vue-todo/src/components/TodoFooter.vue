@@ -5,11 +5,12 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
-const emits = defineEmits(['removeAllTodo'])
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 const fnClearTodo = () => {
-  emits('removeAllTodo')
+  store.commit('REMOVE_ITEMS')
 }
 </script>
 

@@ -5,18 +5,33 @@
       <i class="fa-solid fa-plus addBtn"></i>
     </span>
   </div>
+  <AlertModal v-if="showModal" @close="showModal = false">
+    <template v-slot:header>
+      <h3 class="closeModalBtn">
+        경고!<i class="fas fa-times" @click="showModal = false"></i>
+      </h3>
+    </template>
+    <template v-slot:body>
+      <div>입력하세요</div>
+    </template>
+  </AlertModal>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
-
-const emits = defineEmits(['addTodo'])
+import { ref } from 'vue'
+import AlertModal from './common/AlertModal'
+import { useStore } from 'vuex'
 
 const newTodoItem = ref('')
+const showModal = ref(false)
+const store = useStore()
+
 const fnAddTodo = () => {
   if (newTodoItem.value !== '') {
-    emits('addTodo', newTodoItem.value)
+    store.commit('ADD_ITEM', newTodoItem.value)
     fnClearInput()
+  } else {
+    showModal.value = true
   }
 }
 
@@ -53,5 +68,9 @@ input:focus {
 .addBtn {
   color: white;
   vertical-align: middle;
+}
+
+.closeModalBtn {
+  color: #42b983;
 }
 </style>

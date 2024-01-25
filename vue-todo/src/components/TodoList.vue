@@ -1,7 +1,11 @@
 <template>
   <div>
-    <ul>
-      <li v-for="(todo, index) in todoList" :key="index" class="shadow">
+    <TransitionGroup name="list" tag="ul" class="container">
+      <li
+        v-for="(todo, index) in $store.state.todoList"
+        :key="index"
+        class="shadow"
+      >
         <i
           class="checkBtn fas fa-check"
           :class="{ checkBtnCompleted: todo.completed }"
@@ -12,28 +16,21 @@
           <i class="fas fa-trash-alt"></i>
         </span>
       </li>
-    </ul>
+    </TransitionGroup>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { useStore } from 'vuex'
 
-const props = defineProps({
-  todoList: {
-    type: Array,
-    default: null,
-  },
-})
-
-const emits = defineEmits(['removeOneItem', 'toggleComplete'])
+const store = useStore()
 
 const fnRemoveTodo = (todo, index) => {
-  emits('removeOneItem', todo, index)
+  store.commit('REMOVE_ITEM', { todo, index })
 }
 
 const fnToggleComplete = (index) => {
-  emits('toggleComplete', index)
+  store.commit('TOGGLE_COMPLETE', index)
 }
 </script>
 
@@ -74,5 +71,25 @@ li {
 .removeBtn {
   margin-left: auto;
   color: #de4343;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.list-leave-active {
+  position: absolute;
+  transition: all 1s;
 }
 </style>
